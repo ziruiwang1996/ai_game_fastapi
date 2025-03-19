@@ -1,7 +1,15 @@
 import sys
 import numpy as np
 
-def minimax(game, state, max_depth=-1, evaluation_function=None, alpha=-np.inf, beta=np.inf):
+def simple_evaluator(game, state):
+    # always estimates 0 utility for non-game-over states at the depth limit
+    return 0
+
+def better_evaluator(game, state):
+    # Implement a better evaluation function that outperforms the simple one.
+    pass
+
+def minimax(game, state, max_depth=-1, evaluation_function=simple_evaluator, alpha=-np.inf, beta=np.inf):
     """
     depth-limited minimax with alpha-beta pruning and evaluation function
     default max_depth = -1 will not impose any depth limit
@@ -61,15 +69,6 @@ def minimax(game, state, max_depth=-1, evaluation_function=None, alpha=-np.inf, 
         best_index = np.argmin(utilities)
 
     return children[best_index], utilities[best_index], node_count
-
-def simple_evaluator(game, state):
-    # always estimates 0 utility for non-game-over states at the depth limit
-    return 0
-
-def better_evaluator(game, state):
-    # Implement a better evaluation function that outperforms the simple one.
-    pass
-
 
 def human_turn(game, state):
     # helper to run a human-controlled turn

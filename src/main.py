@@ -1,5 +1,6 @@
 from fastapi import FastAPI
-from .domains.roomba.endpoints import router
+from .domains.roomba.endpoints import roomba_router
+from .domains.gomoku.endpoints import gomoku_router
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(
@@ -22,9 +23,5 @@ app.add_middleware(
     allow_headers=["*"],  # Allows all headers
 )
 
-app.include_router(router)
-
-@app.get("/")
-def home():
-    return "WELCOME"
-
+app.include_router(roomba_router)
+app.include_router(gomoku_router)
