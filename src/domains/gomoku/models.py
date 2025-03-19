@@ -14,10 +14,6 @@ class GomokuDomain:
     def initial_state(self):
         return np.full((self.board_size, self.board_size), EMPTY)
 
-    def string_of(self, state):
-        symbols = np.array(tuple("o.x"))
-        return "\n".join("".join(row) for row in symbols[state+1])
-
     def is_max_turn_in(self, state):
         return (state == MAX).sum() == (state == MIN).sum()
 

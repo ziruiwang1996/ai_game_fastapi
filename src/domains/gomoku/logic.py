@@ -24,9 +24,8 @@ def minimax(game, state, max_depth=-1, evaluation_function=simple_evaluator, alp
     if evaluation_function is None: evaluation_function = (lambda g, s: 0)
 
     # base cases
-    node_count = 1 # at least one game state (the current one) is processed
-    if game.is_over_in(state): return None, game.score_in(state), node_count
-    if max_depth == 0: return None, evaluation_function(game, state), node_count
+    if game.is_over_in(state): return None, game.score_in(state)
+    if max_depth == 0: return None, evaluation_function(game, state)
 
     # setup alpha-beta pruning variables
     is_max = game.is_max_turn_in(state)
@@ -38,14 +37,11 @@ def minimax(game, state, max_depth=-1, evaluation_function=simple_evaluator, alp
     for action in game.valid_actions_in(state):
         # recursively calculate child state utilities and node counts
         child_state = game.perform(action, state)
-        _, utility, child_count = minimax(game, child_state, max_depth-1, evaluation_function, alpha, beta)
+        _, utility = minimax(game, child_state, max_depth-1, evaluation_function, alpha, beta)
 
         # save results 
         children.append(child_state)
         utilities.append(utility)
-
-        # add code here to update node_count based on the recursive call
-        node_count += child_count
 
         # add code here for alpha-beta pruning
         # You can use similar code to the minimax slides, except:
@@ -68,7 +64,7 @@ def minimax(game, state, max_depth=-1, evaluation_function=simple_evaluator, alp
     else:
         best_index = np.argmin(utilities)
 
-    return children[best_index], utilities[best_index], node_count
+    return children[best_index], utilities[best_index]
 
 def human_turn(game, state):
     # helper to run a human-controlled turn

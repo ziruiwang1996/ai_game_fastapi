@@ -15,11 +15,11 @@ AI_WIN = 2
 
 # Helper function to serialize numpy.ndarray to base64 string
 def numpy_to_base64(arr: np.ndarray) -> str:
-    byte_data = arr.tobytes()  # Convert ndarray to bytes
+    byte_data = arr.astype(np.int32).tobytes()
     return base64.b64encode(byte_data).decode('utf-8')  # Encode as base64 string
 
 # Helper function to deserialize base64 string back to numpy.ndarray
-def base64_to_numpy(base64_str: str, shape: tuple, dtype: type = np.float64) -> np.ndarray:
+def base64_to_numpy(base64_str: str, shape: tuple, dtype: type = np.int32) -> np.ndarray:
     byte_data = base64.b64decode(base64_str)  # Decode base64 string to bytes
     return np.frombuffer(byte_data, dtype=dtype).reshape(shape)  # Convert bytes back to ndarray
 
@@ -30,9 +30,7 @@ async def start_game(board_size:int, win_size:int, ai_first:bool):
         state = game.initial_state()
         if ai_first:
             state, _, node_count = minimax(game, state, max_depth=3)
-        return {"state": numpy_to_base64(state), 
-                "string": game.string_of(state), 
-                "status": IN_PROGRESS}
+        return {"state": numpy_to_base64(state), "status": IN_PROGRESS}
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Error: {str(e)}")
 
@@ -42,16 +40,11 @@ async def get_game_state(board_size:int, win_size:int, col:int, row:int, state_s
         game = GomokuDomain(board_size, win_size)
         state = base64_to_numpy(state_str, shape=(board_size, board_size))
         if game.is_over_in(state):
-            return {"state": numpy_to_base64(state), 
-                    "string": game.string_of(state),
-                    "status": PLAYER_WIN}
+            return {"state": numpy_to_base64(state), "status": PLAYER_WIN}
         state = game.perform((row, col), state)
+        state, _, _ = minimax(game, state, max_depth=3)
         if game.is_over_in(state):
-            return {"state": numpy_to_base64(state), 
-                    "string": game.string_of(state),
-                    "status": AI_WIN}
-        return {"state": numpy_to_base64(state), 
-                "string": game.string_of(state),
-                "status": IN_PROGRESS}
+            return {"state": numpy_to_base64(state), "status": AI_WIN}
+        return {"state": numpy_to_base64(state), "status": IN_PROGRESS}
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Error: {str(e)}")
