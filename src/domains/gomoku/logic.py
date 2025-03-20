@@ -1,15 +1,20 @@
-import sys
 import numpy as np
+from .models import GomokuDomain
 
-def simple_evaluator(game, state):
+def simple_evaluator(game, state:np.ndarray):
     # always estimates 0 utility for non-game-over states at the depth limit
     return 0
 
-def better_evaluator(game, state):
+def better_evaluator(game, state:np.ndarray):
     # placeholder for a better evaluation function that outperforms the simple one.
     pass
 
-def minimax(game, state, max_depth=-1, evaluation_function=simple_evaluator, alpha=-np.inf, beta=np.inf):
+def minimax(game:GomokuDomain, 
+            state:np.ndarray, 
+            max_depth=-1, 
+            evaluation_function=simple_evaluator, 
+            alpha=-np.inf, 
+            beta=np.inf) -> tuple[np.ndarray, int]:
     """
     depth-limited minimax with alpha-beta pruning and evaluation function
     default max_depth = -1 will not impose any depth limit
@@ -34,7 +39,6 @@ def minimax(game, state, max_depth=-1, evaluation_function=simple_evaluator, alp
     curMinChild, curMinUtility = None, np.inf
     curMaxChild, curMaxUtility = None, -np.inf
     for action in game.valid_actions_in(state):
-        # recursively calculate child state utilities and node counts
         child_state = game.perform(action, state)
         _, utility = minimax(game, child_state, max_depth-1, evaluation_function, alpha, beta)
 
@@ -43,10 +47,7 @@ def minimax(game, state, max_depth=-1, evaluation_function=simple_evaluator, alp
         if utility > curMaxUtility:
             curMaxChild, curMaxUtility = child_state, utility
 
-        # add code here for alpha-beta pruning
-        # You can use similar code to the minimax slides, except:
-        # - do not call minimax again, use the utility computed recursively above
-        # - break the loop instead of returning from the function
+        # alpha-beta pruning
         if is_max:
             bound = max(bound, utility)
             alpha = max(alpha, bound)

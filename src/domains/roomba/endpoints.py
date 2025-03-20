@@ -1,7 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from .logic import get_path
 from starlette.responses import StreamingResponse
-from pydantic import BaseModel
 
 roomba_router = APIRouter(
     prefix="/roomba",

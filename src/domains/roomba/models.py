@@ -3,11 +3,12 @@ import math
 import heapq as hq
 from collections import deque
 import matplotlib.pyplot as pt
+from typing import Callable
 
 WALL, CHARGER, CLEAN, DIRTY = 0, 1, 2, 3
 
 class RoombaDomain:
-    def __init__(self, row, col, max_power):
+    def __init__(self, row:int, col:int, max_power:int):
         # deterministic grid world
         num_rows, num_cols = row, col
         grid = CLEAN*np.ones((num_rows, num_cols), dtype=int)
@@ -19,21 +20,23 @@ class RoombaDomain:
         self.grid = grid
         self.max_power = max_power
 
-    def pack(self, g, r, c, p):
+    def pack(self, g:np.ndarray, r:int, c:int, p:int) -> tuple[bytes, int, int, int]:
         return (g.tobytes(), r, c, p)
     
-    def unpack(self, state):
+    def unpack(self, state:tuple[bytes, int, int, int]) -> tuple[np.ndarray, int, int, int]:
         grid, r, c, p = state
         grid = np.frombuffer(grid, dtype=int).reshape(self.grid.shape).copy()
         return grid, r, c, p
 
-    def initial_state(self, roomba_position, dirty_positions):
+    def initial_state(self, 
+                      roomba_position:tuple, 
+                      dirty_positions:np.ndarray) -> tuple[bytes, int, int, int]:
         r, c = roomba_position
         grid = self.grid.copy()
         for dr, dc in dirty_positions: grid[dr, dc] = DIRTY
         return self.pack(grid, r, c, self.max_power)
 
-    def render(self, ax, state, x=0, y=0):
+    def render(self, ax:Callable, state:np.ndarray, x=0, y=0)->None:
         grid, r, c, p = self.unpack(state)
         num_rows, num_cols = grid.shape
         ax.imshow(grid, cmap='gray', vmin=0, vmax=3, extent=(x-.5,x+num_cols-.5, y+num_rows-.5, y-.5))
@@ -42,7 +45,7 @@ class RoombaDomain:
         pt.text(c-.25, r+.25, str(p), fontsize=24)
         pt.tick_params(which='both', bottom=False, left=False, labelbottom=False, labelleft=False)
 
-    def valid_actions(self, state):
+    def valid_actions(self, state:np.ndarray) -> list[tuple[tuple[int, int], int]]:
         # r, c is the current row and column of the roomba
         # p is the current power level of the roomba
         # grid[i,j] is WALL, CHARGER, CLEAN or DIRTY to indicate status at row i, column j.
@@ -51,8 +54,8 @@ class RoombaDomain:
         actions = [((0, 0), 1)]
         if not p:
             return actions
-        # Update the list of valid actions as described in the instruction PDF
-        # actions[k] should have the form ((dr, dc), step_cost) for the kth valid action
+        # Update the list of valid actions 
+        # actions[k] has the form ((dr, dc), step_cost) for the kth valid action
         # where dr, dc are the change to roomba's row and column position
         if r-1 >= 0 and grid[r-1, c] != WALL: 
             actions.append(((-1, 0), 1))
@@ -72,10 +75,10 @@ class RoombaDomain:
             actions.append(((1, 1), 1))
         return actions
     
-    def perform_action(self, state, action):
+    def perform_action(self, state:np.ndarray, action:tuple[int, int]) -> np.ndarray:
         grid, r, c, p = self.unpack(state)
         dr, dc = action
-        # update grid, r, c, and p as described in the instruction PDF
+        # update grid, r, c, and p 
         if dr == 0 and dc == 0:
             if grid[r, c] == CHARGER and p < self.max_power:
                 p += 1
@@ -88,15 +91,14 @@ class RoombaDomain:
         new_state = self.pack(grid, r, c, p)
         return new_state
 
-    def is_goal(self, state):
+    def is_goal(self, state:np.ndarray) -> bool:
         grid, r, c, p = self.unpack(state)
         # In a goal state, no grid cell should be dirty
-        result = (grid != DIRTY).all()
-        # Implement additional requirement that roomba is back at a charger
-        result = result and grid[r, c] == CHARGER
-        return result
+        all_cleaned = (grid != DIRTY).all()
+        # ensure roomba is back at a charger
+        return all_cleaned and grid[r, c] == CHARGER
 
-    def simple_heuristic(self, state):
+    def simple_heuristic(self, state:np.ndarray) -> int:
         grid, r, c, p = self.unpack(state)
         # get list of dirty positions
         # dirty[k] has the form (i, j)
@@ -109,9 +111,8 @@ class RoombaDomain:
         # estimate the remaining cost to goal as the largest distance to a dirty position
         return int(max(dists))
 
-    def better_heuristic(self, state):
-        # Implement a "better" heuristic than simple_heuristic
-        # "Better" means more memory-efficient (fewer popped nodes during A* search)
+    def better_heuristic(self, state:np.ndarray) -> int:
+        # a more memory-efficient heuristic than simple_heuristic (fewer popped nodes during A* search)
         grid, r, c, p = self.unpack(state)
         dirty = list(zip(*np.nonzero(grid == DIRTY)))
         if len(dirty) == 0: return 0
