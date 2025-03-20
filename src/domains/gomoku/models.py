@@ -48,3 +48,6 @@ class GomokuDomain:
     def is_over_in(self, state):
         draw = (state != EMPTY).all()
         return draw or self.score_in(state) != 0
+    
+    def is_draw(self, state):
+        return (state != EMPTY).all()
