@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-from .domains.roomba.endpoints import roomba_router
-from .domains.gomoku.endpoints import gomoku_router
+from domains.roomba.endpoints import roomba_router
+from domains.gomoku.endpoints import gomoku_router
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(

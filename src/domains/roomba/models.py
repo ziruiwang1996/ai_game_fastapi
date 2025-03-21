@@ -65,14 +65,6 @@ class RoombaDomain:
             actions.append(((0, -1), 1))
         if c+1 < num_cols and grid[r, c+1] != WALL: 
             actions.append(((0, 1), 1))
-        if r-1 >= 0 and c-1 >= 0 and grid[r-1, c-1] != WALL: 
-            actions.append(((-1, -1), 1))
-        if r-1 >= 0 and c+1 < num_cols and grid[r-1, c+1] != WALL: 
-            actions.append(((-1, 1), 1))
-        if r+1 < num_rows and c-1 >= 0 and grid[r+1, c-1] != WALL: 
-            actions.append(((1, -1), 1))
-        if r+1 < num_rows and c+1 < num_cols and grid[r+1, c+1] != WALL: 
-            actions.append(((1, 1), 1))
         return actions
     
     def perform_action(self, state:np.ndarray, action:tuple[int, int]) -> np.ndarray:
