@@ -5,7 +5,7 @@ import numpy as np
 import base64
 
 gomoku_router = APIRouter(
-    prefix="/gomoku",
+    prefix="/api/gomoku",
     tags=["gomoku"]
 )
 

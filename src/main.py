@@ -2,8 +2,6 @@ from fastapi import FastAPI
 from domains.roomba.endpoints import roomba_router
 from domains.gomoku.endpoints import gomoku_router
 from fastapi.middleware.cors import CORSMiddleware
-import os
-REACT_APP_URL = os.getenv("REACT_APP_URL")
 
 app = FastAPI(
     title="AI Game Hub API",
@@ -11,13 +9,7 @@ app = FastAPI(
     version="1.0.0"
 )
 
-origins = [
-    REACT_APP_URL,
-    "54.144.65.219"
-    "http://localhost",
-    "http://localhost:3000",  # React development server
-    "http://127.0.0.1:3000"  # Alternative localhost format
-]
+origins = ["*"]
 
 app.add_middleware(
     CORSMiddleware,
@@ -29,3 +21,7 @@ app.add_middleware(
 
 app.include_router(roomba_router)
 app.include_router(gomoku_router)
+
+@app.get("/")
+def welcome():
+    return "Welcome to AI geme center backend"

@@ -3,7 +3,7 @@ from .logic import get_path
 from starlette.responses import StreamingResponse
 
 roomba_router = APIRouter(
-    prefix="/roomba",
+    prefix="/api/roomba",
     tags=["roomba"]
 )
 
