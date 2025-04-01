@@ -3,12 +3,12 @@ from .logic import TD_Q_Learning
 from .models import CatMouseDomain
 from starlette.responses import StreamingResponse
 
-catmouse_router = APIRouter(
+cat_mouse_router = APIRouter(
     prefix="/api/catmouse",
     tags=["catmouse"]
 )
 
-@catmouse_router.get("/")
+@cat_mouse_router.get("/")
 async def get_animation(row:int, col:int):
     try:
         game = CatMouseDomain(row, col)

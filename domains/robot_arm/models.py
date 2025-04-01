@@ -3,15 +3,12 @@ import torch as tr
 
 # Visualize the current arm/gripper position
 def viz(arm_points, grip_points, d):
-
     arm_points = arm_points.detach() # for matplotlib
     grip_points = grip_points.detach() # for matplotlib
-
     # arm_points[0,j], arm_points[1,j] are (x,y) coordinates for joint j
     # similarly the points delineating the gripper
     pt.plot(arm_points[0,:], arm_points[1,:], '-ko')
     pt.plot(grip_points[0,:], grip_points[1,:], '-k')
-
     pt.xlim([-sum(d), sum(d)])
     pt.ylim([-sum(d), sum(d)])
 
@@ -54,7 +51,6 @@ def get_transforms(theta, d):
 
 # Forward kinematics: use transforms to get positions of each joint/gripper
 def fwd(theta, d):
-
     # Get transforms for current joints
     transforms = get_transforms(theta, d)
 
@@ -74,9 +70,6 @@ def fwd(theta, d):
 
     return arm_points, grip_points
 
-
-
-# fig = pt.figure(figsize=(4,4)) # each time-step is rendered on this figure
 
 # Fixed lengths for each link in arm
 d = [8., 13.]

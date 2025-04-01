@@ -1,7 +1,8 @@
 from fastapi import FastAPI
 from .domains.roomba.endpoints import roomba_router
 from .domains.gomoku.endpoints import gomoku_router
-from .domains.cat_mouse.endpoints import catmouse_router
+from .domains.cat_mouse.endpoints import cat_mouse_router
+from .domains.robot_arm.endpoints import robot_arm_router
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(
@@ -22,7 +23,8 @@ app.add_middleware(
 
 app.include_router(roomba_router)
 app.include_router(gomoku_router)
-app.include_router(catmouse_router)
+app.include_router(cat_mouse_router)
+app.include_router(robot_arm_router)
 
 @app.get("/")
 def welcome():
