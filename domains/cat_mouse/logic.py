@@ -23,7 +23,7 @@ def TD_Q_Learning(game:CatMouseDomain, ɣ = 0.5):
     state = (0, 0, 3, 0)
 
     # Total number of time-steps for learning
-    num_timesteps = 10**6
+    num_timesteps = 10**5
 
     fig, ax = pt.subplots(figsize=(8, 8))
     frames = []

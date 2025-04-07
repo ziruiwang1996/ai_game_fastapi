@@ -5,7 +5,7 @@ import tempfile
 import io
 import os
 
-def adjust_robot_arm(d:list, t:list):
+def adjust_robot_arm(d:list, t:list, iterations:int):
     # Start joint angles at zero
     # Require gradient since joints will be optimized
     theta = tr.zeros(len(d), requires_grad=True)
@@ -23,7 +23,7 @@ def adjust_robot_arm(d:list, t:list):
     # 500 iterations of gradient descent
     # "loss" is squared distance between gripper and target
     # taking gradient of loss w.r.t joint angles
-    for t in range(50):
+    for t in range(iterations):
         # Save current angles in history
         history.append(theta.clone().detach().numpy())
 

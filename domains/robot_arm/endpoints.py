@@ -8,11 +8,11 @@ robot_arm_router = APIRouter(
 )
 
 @robot_arm_router.get("/")
-async def get(arms: str, target: str):
+async def get(arms: str, target: str, iterations: int):
     try:
         arms = [float(char.lstrip().rstrip()) for char in arms.split(',')]
         target = [float(char.lstrip().rstrip()) for char in target.split(',')]
-        buffer = adjust_robot_arm(arms, target)
+        buffer = adjust_robot_arm(arms, target, iterations)
         return StreamingResponse(buffer, media_type="image/gif")
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Error: {str(e)}")
