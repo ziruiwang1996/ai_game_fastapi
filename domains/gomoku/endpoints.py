@@ -3,6 +3,8 @@ from .models import GomokuDomain
 from .logic import minimax
 import numpy as np
 import base64
+import asyncio
+from starlette.concurrency import run_in_threadpool
 
 gomoku_router = APIRouter(
     prefix="/api/gomoku",
@@ -30,7 +32,10 @@ async def start_game(board_size:int, win_size:int, ai_first:bool):
         game = GomokuDomain(board_size, win_size)
         state = game.initial_state()
         if ai_first:
-            state, _ = minimax(game, state, max_depth=5)
+            state, _ = await asyncio.wait_for(
+                run_in_threadpool(minimax, game, state, 5),
+                timeout=60
+            )
         return {"state": numpy_to_base64(state), "status": IN_PROGRESS}
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Error: {str(e)}")
@@ -47,12 +52,15 @@ async def get_game_state(board_size:int, win_size:int, col:int, row:int, state_s
                 return {"state": numpy_to_base64(state), "status": TIE}
             return {"state": numpy_to_base64(state), "status": PLAYER_WIN}
         
-        state, _ = minimax(game, state, max_depth=5)
+        state, _ = await asyncio.wait_for(
+            run_in_threadpool(minimax, game, state, 5),
+            timeout=60
+        )
+
         if game.is_over_in(state):
             if game.is_draw(state):
                 return {"state": numpy_to_base64(state), "status": TIE}
             return {"state": numpy_to_base64(state), "status": AI_WIN}
-        
         return {"state": numpy_to_base64(state), "status": IN_PROGRESS}
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Error: {str(e)}")
