@@ -23,7 +23,7 @@ AI Game Suite is a collection of interactive games that showcase various AI algo
 
 ## How to Run the Application
 
-1. **Clone the Repository**:
+1. **Clone the repository**:
    ```bash
    mkdir ai-game
    cd ai-game
@@ -34,6 +34,7 @@ AI Game Suite is a collection of interactive games that showcase various AI algo
    ```bash
    touch docker-compose.yml # create a file
    nano docker-compose.yml # enter text editor and add follwing code into file
+   ```
    ```
    version: '3'
    services:
@@ -60,12 +61,13 @@ AI Game Suite is a collection of interactive games that showcase various AI algo
       ai-game-network:
          driver: bridge
 
-3. **Build and Start the Containers**
+3. **Build and start the containers**
       ```bash
       docker-compose up --build
 
-4. **Access the Application http://localhost:80**
+4. **Access the application**
+      at http://localhost:80**
 
-5. **Stop and Remove Built-containers**
+5. **Stop and remove built-containers**
       ```bash
       docker-compose down
