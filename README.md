@@ -1,7 +1,6 @@
 # AI Game Center Backend Server 
 
-App Demo: http://3.12.182.165
-AI Game Suite is a collection of interactive games that showcase various AI algorithms and concepts. Each game is designed to be both educational and entertaining, allowing users to explore AI-driven problem-solving techniques in a fun and engaging way.
+AI Game Suite is a collection of interactive games that showcase various AI algorithms and concepts. Each game is designed to be both educational and entertaining, allowing users to explore AI-driven problem-solving techniques in a fun and engaging way. App Demo: http://3.12.182.165
 
 ## Features
 
@@ -30,9 +29,7 @@ AI Game Suite is a collection of interactive games that showcase various AI algo
    cd ai-game
    git clone https://github.com/ziruiwang1996/ai_game_fastapi.git 
    git clone https://github.com/ziruiwang1996/ai_game_react.git 
-   mv ai_game_fastapi backend
-   mv ai_game_react frontend
-   # add docker-compose.yml showing below
+   # make a docker-compose.yml file in the same directory
    docker-compose up -d #run
    ```
 
@@ -41,7 +38,7 @@ AI Game Suite is a collection of interactive games that showcase various AI algo
    services:
       fastapi:
          build: 
-               context: ./back-end/src
+               context: ./ai_game_fastapi
                dockerfile: Dockerfile
          ports:
                - "8000:8000"
@@ -49,7 +46,7 @@ AI Game Suite is a collection of interactive games that showcase various AI algo
                - ai-game-network
       nginx:
          build: 
-               context: ./front-end
+               context: ./ai_game_react
                dockerfile: Dockerfile
          container_name: nginx_proxy
          ports:
