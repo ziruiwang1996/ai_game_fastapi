@@ -66,7 +66,7 @@ AI Game Suite is a collection of interactive games that showcase various AI algo
       docker-compose up --build
 
 4. **Access the application**
-      at http://localhost:80**
+      at http://localhost:80
 
 5. **Stop and remove built-containers**
       ```bash
