@@ -29,11 +29,8 @@ AI Game Suite is a collection of interactive games that showcase various AI algo
    cd ai-game
    git clone https://github.com/ziruiwang1996/ai_game_fastapi.git 
    git clone https://github.com/ziruiwang1996/ai_game_react.git 
-   # make a docker-compose.yml file in the same directory
-   docker-compose up --build # build and start the containers
-   # access application at http://localhost:80
    ```
-
+2. **Add docker-compose.yml in the same directory**:
    ```
    version: '3'
    services:
@@ -59,3 +56,9 @@ AI Game Suite is a collection of interactive games that showcase various AI algo
    networks:
       ai-game-network:
          driver: bridge
+
+3. **Build and Start the Containers**
+      ```bash
+      docker-compose up --build
+
+4. **Access the Application http://localhost:80**
